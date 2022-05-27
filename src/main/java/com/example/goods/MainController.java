@@ -14,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Persistence;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.*;
 
 @Validated
@@ -30,33 +28,27 @@ public class MainController {
     private PropertiesRepo propertiesRepo;
 
     @GetMapping("/all")
-    public Iterable<Product> main(Map<String, Object> model){
-        model.put("products", this.productsRepo.findAll());
+    public Iterable<Product> main(){
         Iterable<Property> properties = this.propertiesRepo.findAll();
-        model.put("properties", properties);
         List<Property> productsTypes = new ArrayList<>();
         for (Property prop: properties) {
             if(!productsTypes.contains(prop.getType())){
                 productsTypes.add(prop);
             }
         }
-        model.put("productsTypes", productsTypes);
-        model.put("filteredProductsList", properties);
-
         return productsRepo.findAll();
     }
 
     @GetMapping("/pages")
     public Iterable<Product> page(
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
-            Map<String, Object> model){
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
         Page<Product> page;
         page = productsRepo.findAll(pageable);
         return page;
     }
 
     @GetMapping("/filter") //1 - asc, all the rest - desc
-    public List<Property> main(@RequestParam String type, @RequestParam Integer ordering, Map<String, Object> model){
+    public List<Property> main(@RequestParam String type, @RequestParam Integer ordering){
         Iterable<Property> properties = this.propertiesRepo.findAll();
         List<Property> filteredProductsList = new ArrayList<Property>();
         for (Property prop: properties) {
@@ -73,7 +65,7 @@ public class MainController {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getProduct(@PathVariable Integer id,  Map<String, Object> model){
+    public Map<String, Object> getProduct(@PathVariable Integer id){
         Map<String, Object> result = new HashMap<>();
         result.put("id", productsRepo.findById(id).get().getId());
         result.put("name", productsRepo.findById(id).get().getName());
@@ -88,7 +80,7 @@ public class MainController {
     }
 
     @PostMapping("/product")
-    public Product addProduct(@RequestParam String name, Map<String, Object> model){
+    public Product addProduct(@RequestParam String name){
         Product product = new Product(name);
         productsRepo.save(product);
         return product;
@@ -96,8 +88,7 @@ public class MainController {
 
     @PostMapping("/property")
     public Property addProperty(@Valid @RequestParam Integer product_id, @Valid @RequestParam String type,
-                                @Valid @RequestParam Double price, @Valid @RequestParam String brand,
-                                Map<String, Object> model){
+                                @Valid @RequestParam Double price, @Valid @RequestParam String brand){
         Product product = productsRepo.findById(product_id).get();
         Property property = new Property(product, type, price, brand);
         propertiesRepo.save(property);
@@ -105,7 +96,7 @@ public class MainController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public Integer removeProduct(@PathVariable Integer id, Map<String, Object> model){
+    public Integer removeProduct(@PathVariable Integer id){
         Iterable<Property> allProperties = propertiesRepo.findAll();
         for (Property prop : allProperties) {
             if(prop.getProduct().getId().equals(id))
@@ -125,7 +116,7 @@ public class MainController {
     @PatchMapping("/patchProperty")
     public void patchProperty(@RequestParam Integer id, @RequestParam Integer product_id,
                               @RequestParam String type, @RequestParam Double price,
-                              @RequestParam String brand ){
+                              @RequestParam String brand){
         Property currentProperty = propertiesRepo.findById(id).get();
         currentProperty.setPrice(price);
         currentProperty.setType(type);
@@ -135,7 +126,7 @@ public class MainController {
     }
 
     @DeleteMapping("/deleteProp/{id}")
-    public Integer removeProp(@PathVariable Integer id, Map<String, Object> model){
+    public Integer removeProp(@PathVariable Integer id){
         propertiesRepo.deleteById(id);
         return id;
     }

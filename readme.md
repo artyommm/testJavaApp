@@ -233,6 +233,7 @@ http://localhost:8080/pages?page=1
 ```
 
 ### Фильтр и сортировка
+```ordering = 1``` сортировка по алфавиту, все остальные значения - в обратном порядке
 ```
 http://localhost:8080/filter?type=clothes&ordering=1
 ```
