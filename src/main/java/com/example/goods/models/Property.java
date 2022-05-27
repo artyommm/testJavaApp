@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Property {
@@ -18,12 +19,15 @@ public class Property {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @NotBlank
     private String type;
 
+    @NotBlank
     private String brand;
 
     //@Min(0)
-    @DecimalMin(value = "0.0", inclusive = true)
+    //@DecimalMin(value = "0.0", inclusive = true)
+    @Min(0)
     private Double price;
 
     public void setProduct(Product product) {
@@ -56,6 +60,9 @@ public class Property {
         return type;
     }
 
+    public Integer getId() {
+        return id;
+    }
     public void setType(String type) {
         this.type = type;
     }

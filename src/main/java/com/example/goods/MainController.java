@@ -6,6 +6,10 @@ import com.example.goods.repos.ProductsRepo;
 
 import com.example.goods.repos.PropertiesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +29,7 @@ public class MainController {
     @Autowired
     private PropertiesRepo propertiesRepo;
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public Iterable<Product> main(Map<String, Object> model){
         model.put("products", this.productsRepo.findAll());
         Iterable<Property> properties = this.propertiesRepo.findAll();
@@ -40,7 +44,15 @@ public class MainController {
         model.put("filteredProductsList", properties);
 
         return productsRepo.findAll();
-        //return "main";
+    }
+
+    @GetMapping("/pages")
+    public Iterable<Product> page(
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
+            Map<String, Object> model){
+        Page<Product> page;
+        page = productsRepo.findAll(pageable);
+        return page;
     }
 
     @GetMapping("/filter") //1 - asc, all the rest - desc
@@ -83,8 +95,8 @@ public class MainController {
     }
 
     @PostMapping("/property")
-    public Property addProperty(@RequestParam Integer product_id, @RequestParam String type,
-                                @RequestParam @Min(0) Double price, @RequestParam String brand,
+    public Property addProperty(@Valid @RequestParam Integer product_id, @Valid @RequestParam String type,
+                                @Valid @RequestParam Double price, @Valid @RequestParam String brand,
                                 Map<String, Object> model){
         Product product = productsRepo.findById(product_id).get();
         Property property = new Property(product, type, price, brand);
@@ -92,9 +104,8 @@ public class MainController {
         return property;
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public Integer removeProduct(@PathVariable Integer id, Map<String, Object> model){
-//        List<Property> props = new ArrayList();
         Iterable<Property> allProperties = propertiesRepo.findAll();
         for (Property prop : allProperties) {
             if(prop.getProduct().getId().equals(id))
@@ -106,13 +117,6 @@ public class MainController {
 
     @PatchMapping("/patchProduct")
     public void patchProduct(@RequestParam Integer id, @RequestParam String name){
-        Product currentProduct = productsRepo.findById(id).get();
-        currentProduct.setName(name);
-        productsRepo.save(currentProduct);
-    }
-
-    @PutMapping("/putProduct")
-    public void putProduct(@RequestParam Integer id, @RequestParam String name){
         Product currentProduct = productsRepo.findById(id).get();
         currentProduct.setName(name);
         productsRepo.save(currentProduct);
@@ -130,15 +134,9 @@ public class MainController {
         propertiesRepo.save(currentProperty);
     }
 
-    @PutMapping("/putProperty")
-    public void putProperty(@RequestParam Integer id, @RequestParam Integer product_id,
-                            @RequestParam String type, @RequestParam Double price,
-                            @RequestParam String brand ){
-        Property currentProperty = propertiesRepo.findById(id).get();
-        currentProperty.setPrice(price);
-        currentProperty.setType(type);
-        currentProperty.setBrand(brand);
-        currentProperty.setProduct(productsRepo.findById(product_id).get());
-        propertiesRepo.save(currentProperty);
+    @DeleteMapping("/deleteProp/{id}")
+    public Integer removeProp(@PathVariable Integer id, Map<String, Object> model){
+        propertiesRepo.deleteById(id);
+        return id;
     }
 }
