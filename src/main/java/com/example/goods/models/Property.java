@@ -23,64 +23,30 @@ public class Property {
     private String type;
 
     @NotBlank
-    private String brand;
-
-    //@Min(0)
-    //@DecimalMin(value = "0.0", inclusive = true)
-    @Min(0)
-    private Double price;
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+    private String value;
 
     public Property() {
     }
 
-    public Property(Product product, String type, Double price, String brand) {
+    public Property(Product product, String type, String value) {
         this.product = product;
         this.type = type;
-        this.price = price;
-        this.brand = brand;
+        this.value = value;
     }
 
-    public Property(Integer id, Product product, String type, Double price, String brand) {
-        this.id = id;
-        this.product = product;
-        this.type = type;
-        this.price = price;
-        this.brand = brand;
+    public Integer getId() {
+        return id;
     }
 
-    public Product getProduct() {
-        return product;
+    public Integer getProduct() {
+        return product.getId();
     }
 
     public String getType() {
         return type;
     }
 
-    public Integer getId() {
-        return id;
+    public String getValue() {
+        return value;
     }
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
 }

@@ -1,9 +1,6 @@
 package com.example.goods.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Product {
@@ -12,6 +9,14 @@ public class Product {
     private Integer id;
 
     private String name;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "price_prop_id")
+    private Property price;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "country_prop_id")
+    private Property country;
 
     public Product() {
     }
@@ -39,5 +44,21 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Property getPrice() {
+        return price;
+    }
+
+    public Property getCountry() {
+        return country;
+    }
+
+    public void setPrice(Property price) {
+        this.price = price;
+    }
+
+    public void setCountry(Property country) {
+        this.country = country;
     }
 }
