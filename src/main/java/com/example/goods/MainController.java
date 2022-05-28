@@ -30,13 +30,6 @@ public class MainController {
 
     @GetMapping("/all")
     public Iterable<Product> getAllProducts(){
-//        Iterable<Property> properties = this.propertiesRepo.findAll();
-//        List<Property> productsTypes = new ArrayList<>();
-//        for (Property prop: properties) {
-//            if(!productsTypes.contains(prop.getType())){
-//                productsTypes.add(prop);
-//            }
-//        }
         return productsRepo.findAll();
     }
 
@@ -50,7 +43,7 @@ public class MainController {
     }
 
     @GetMapping("/filter") //1 - asc, all the rest - desc
-    public List<Property> getFilteredProducts(@RequestParam String productName, @RequestParam String propType, @RequestParam String propValue){
+    public List<Product> getFilteredProducts(@RequestParam String productName, @RequestParam String propType, @RequestParam String propValue){
 //        Iterable<Property> properties = this.propertiesRepo.findAll();
 //        List<Property> filteredProductsList = new ArrayList<Property>();
 //        for (Property prop: properties) {
@@ -67,8 +60,11 @@ public class MainController {
         //PropertiesRepo properties = propertiesRepo.findByType(propType).findByValue(propValue);
         //properties.findByValue(propValue);
         //return productsRepo.findByNameContaining(productName);
-
-        return  propertiesRepo.findByTypeAndValue(propType, propValue);
+        System.out.println("sorted product repo: ");
+        System.out.println(productsRepo.findAll(propType));
+        //return  propertiesRepo.findByTypeAndValue(propType, propValue);
+        return productsRepo.findAll(propType); //все продукты в которых содержится характеристика типа propType
+        //return null;
     }
 
     @GetMapping("/{id}")

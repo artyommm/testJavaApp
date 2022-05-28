@@ -8,7 +8,8 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-@Entity
+@Table(name="property")
+@Entity(name="property")
 public class Property {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

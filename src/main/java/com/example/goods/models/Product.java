@@ -2,7 +2,8 @@ package com.example.goods.models;
 
 import javax.persistence.*;
 
-@Entity
+@Table(name="product")
+@Entity(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
