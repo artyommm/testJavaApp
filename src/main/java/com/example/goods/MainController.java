@@ -28,10 +28,10 @@ public class MainController {
     @Autowired
     private PropertiesRepo propertiesRepo;
 
-    @GetMapping("/all")
-    public Iterable<Product> getAllProducts(){
-        return productsRepo.findAll();
-    }
+//    @GetMapping("/all")
+//    public Iterable<Product> getAllProducts(){
+//        return productsRepo.findAll();
+//    }
 
     @GetMapping("/pages")
     public Iterable<Product> page(
@@ -43,28 +43,24 @@ public class MainController {
     }
 
     @GetMapping("/filter") //1 - asc, all the rest - desc
-    public List<Product> getFilteredProducts(@RequestParam String productName, @RequestParam String propType, @RequestParam String propValue){
-//        Iterable<Property> properties = this.propertiesRepo.findAll();
-//        List<Property> filteredProductsList = new ArrayList<Property>();
-//        for (Property prop: properties) {
-//            if(prop.getType().equals(type)){
-//                filteredProductsList.add(prop);
-//            }
-//        }
-//        if(ordering==1)
-//            filteredProductsList.sort((left, right) -> left.getProduct().getName().compareTo(right.getProduct().getName()));
-//        else
-//            filteredProductsList.sort((left, right) -> right.getProduct().getName().compareTo(left.getProduct().getName()));
-
-//        return filteredProductsList;
-        //PropertiesRepo properties = propertiesRepo.findByType(propType).findByValue(propValue);
-        //properties.findByValue(propValue);
-        //return productsRepo.findByNameContaining(productName);
-        System.out.println("sorted product repo: ");
-        System.out.println(productsRepo.findAll(propType));
-        //return  propertiesRepo.findByTypeAndValue(propType, propValue);
-        return productsRepo.findAll(propType); //все продукты в которых содержится характеристика типа propType
-        //return null;
+    public Iterable<Product> getAllProducts(){
+        return productsRepo.findAll();
+    }
+//    @GetMapping(value = "/filter", params = {"productName"})
+//    public Iterable<Product> getFilteredProducts(@RequestParam(value = "productName") String productName,
+//                                                 @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
+//        return productsRepo.findByNameContaining(productName, pageable).getContent(); //все продукты в имени которых содержится productName
+//    }
+//    @GetMapping(value = "/filter", params = {"propType"})
+//    public Iterable<Product> getFilteredProducts(@RequestParam(value = "propType") String propType,
+//                                                 @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
+//        return productsRepo.findAll(propType, pageable).getContent(); //все продукты в которых содержится характеристика типа propType
+//    }
+    @GetMapping(value = "/filter", params = {"productName", "propType"}) //пустой productName - поиск по всем продуктам, работает LIKE
+    public Iterable<Product> getFilteredProducts(@RequestParam(value = "productName") String productName,
+                                                 @RequestParam(value = "propType") String propType,
+                                                 @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
+        return productsRepo.findAll(productName, propType, pageable).getContent(); //все продукты в которых содержится характеристика типа propType
     }
 
     @GetMapping("/{id}")
@@ -102,11 +98,6 @@ public class MainController {
 
     @DeleteMapping("/delete/{id}")
     public Integer removeProduct(@PathVariable Integer id){
-        Iterable<Property> allProperties = propertiesRepo.findAll();
-        for (Property prop : allProperties) {
-//            if(prop.getProduct().getId().equals(id))
-//                propertiesRepo.delete(prop);
-        }
         productsRepo.deleteById(id);
         return id;
     }
@@ -119,14 +110,11 @@ public class MainController {
     }
 
     @PatchMapping("/patchProperty")
-    public void patchProperty(@RequestParam Integer id, @RequestParam Integer product_id,
-                              @RequestParam String type, @RequestParam Double price,
-                              @RequestParam String brand){
+    public void patchProperty(@RequestParam Integer id, @RequestParam String type,
+                              @RequestParam String value){
         Property currentProperty = propertiesRepo.findById(id).get();
-//        currentProperty.setPrice(price);
-//        currentProperty.setType(type);
-//        currentProperty.setBrand(brand);
-//        currentProperty.setProduct(productsRepo.findById(product_id).get());
+        currentProperty.setType(type);
+        currentProperty.setValue(value);
         propertiesRepo.save(currentProperty);
     }
 
