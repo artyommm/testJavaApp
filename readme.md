@@ -66,18 +66,14 @@ Response:
 
 ### Добавление характеристики
 ```
-http://localhost:8080/property?product_id=76&type=electronics&price=10&brand=samsung
+http://localhost:8080/property?product_id=1&type=owner&value=Ilon Mask
 ```
 ```json
 {
-    "id": 88,
-    "product": {
-        "id": 76,
-        "name": "TV"
-    },
-    "type": "electronics",
-    "brand": "samsung",
-    "price": 10.0
+  "id": 37,
+  "product": 1,
+  "type": "owner",
+  "value": "Ilon Mask"
 }
 ```
 
