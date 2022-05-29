@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Entity(name="property")
 public class Property {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER)

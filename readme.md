@@ -9,27 +9,58 @@
 
 |                 **Название функции**                 | **URL API функции**                   | **Параметры**                      | **Тело запроса** | **Метод** |
 |:----------------------------------------------------:|---------------------------------------|------------------------------------|:----------------:|-----------|
-|               Получить список товаров                | http://localhost:8080/all             | -                                  |        -         | GET       |
-|         Получить список товаров постранично          | http://localhost:8080/pages           | page                               |        -         | GET       |
-| Фильтр товаров по типу, сортировка по имени продукта | http://localhost:8080/filter          | type, ordering                     |        -         | GET       |
+|               Получить список товаров                | http://localhost:8080/all             | productName, propTypes             |        -         | GET       |
 |             Получение конкретного товара             | http://localhost:8080/{id}            | {id}                               |        -         | GET       |
-|                    Вставка товара                    | http://localhost:8080/product         | name                               |        -         | POST      |
+|                    Вставка товара                    | http://localhost:8080/product         | -                                  |    newProduct    | POST      |
 |                   Удаление товара                    | http://localhost:8080/delete/{id}     | {id}                               |        -         | DELETE    |
 |                   Изменение товара                   | http://localhost:8080/patchProduct    | id, name                           |        -         | PATCH     |
-|                Вставка характеристики                | http://localhost:8080/property        | product_id, type, price, brand     |        -         | POST      |
+|                Вставка характеристики                | http://localhost:8080/property        | product_id, type, value            |        -         | POST      |
 |               Удаление характеристики                | http://localhost:8080/deleteProp/{id} | {id}                               |        -         | DELETE    |
-|               Изменение характеристики               | http://localhost:8080/patchProperty   | id, product_id, type, price, brand |        -         | PATCH     |
+|               Изменение характеристики               | http://localhost:8080/patchProperty   | id, product_id, type, value        |        -         | PATCH     |
 
 Примеры:
 
 ### Добавление товара
 ```
-http://localhost:8080/product?name=TV
+http://localhost:8080/product
 ```
+Request body:
 ```json
 {
-    "id": 76,
-    "name": "TV"
+  "name": "tesla model s",
+  "properties": [
+    {
+      "type": "price",
+      "value": "100000"
+    },
+    {
+      "type": "country",
+      "value": "USA"
+    },
+    {
+      "type": "weight",
+      "value": "2000"
+    }
+  ]
+}
+```
+Response:
+```json
+{
+    "id": 1,
+    "name": "tesla model s",
+    "price": {
+        "id": 1,
+        "product": 1,
+        "type": "price",
+        "value": "100000"
+    },
+    "country": {
+        "id": 2,
+        "product": 1,
+        "type": "country",
+        "value": "USA"
+    }
 }
 ```
 
@@ -53,305 +84,386 @@ http://localhost:8080/property?product_id=76&type=electronics&price=10&brand=sam
 ### Получение списка товаров
 
 ```
-http://localhost:8080/all
+http://localhost:8080/all?productName
 ```
 
 ```json
 [
-    {
-        "id": 76,
-        "name": "TV"
+  {
+    "id": 2,
+    "name": "algorithm book",
+    "price": {
+      "id": 4,
+      "product": 2,
+      "type": "price",
+      "value": "10"
     },
-    {
-        "id": 77,
-        "name": "moto"
-    },
-    {
-        "id": 78,
-        "name": "auto"
-    },
-    {
-        "id": 79,
-        "name": "ps5"
-    },
-    {
-        "id": 80,
-        "name": "t-shirt"
-    },
-    {
-        "id": 81,
-        "name": "computer"
-    },
-    {
-        "id": 82,
-        "name": "umbrella"
-    },
-    {
-        "id": 83,
-        "name": "plane"
-    },
-    {
-        "id": 84,
-        "name": "tesla model s"
-    },
-    {
-        "id": 85,
-        "name": "lada granta"
-    },
-    {
-        "id": 86,
-        "name": "harry potter"
-    },
-    {
-        "id": 87,
-        "name": "tyumen state university"
+    "country": {
+      "id": 5,
+      "product": 2,
+      "type": "country",
+      "value": "USA"
     }
+  },
+  {
+    "id": 12,
+    "name": "chicken",
+    "price": {
+      "id": 34,
+      "product": 12,
+      "type": "price",
+      "value": "1"
+    },
+    "country": {
+      "id": 35,
+      "product": 12,
+      "type": "country",
+      "value": "Russia"
+    }
+  },
+  {
+    "id": 3,
+    "name": "coca cola",
+    "price": {
+      "id": 7,
+      "product": 3,
+      "type": "price",
+      "value": "5"
+    },
+    "country": {
+      "id": 8,
+      "product": 3,
+      "type": "country",
+      "value": "USA"
+    }
+  },
+  {
+    "id": 7,
+    "name": "coffee",
+    "price": {
+      "id": 19,
+      "product": 7,
+      "type": "price",
+      "value": "10"
+    },
+    "country": {
+      "id": 20,
+      "product": 7,
+      "type": "country",
+      "value": "Zimbabve"
+    }
+  },
+  {
+    "id": 4,
+    "name": "jeans",
+    "price": {
+      "id": 10,
+      "product": 4,
+      "type": "price",
+      "value": "15"
+    },
+    "country": {
+      "id": 11,
+      "product": 4,
+      "type": "country",
+      "value": "Japan"
+    }
+  },
+  {
+    "id": 8,
+    "name": "laptop",
+    "price": {
+      "id": 22,
+      "product": 8,
+      "type": "price",
+      "value": "1000"
+    },
+    "country": {
+      "id": 23,
+      "product": 8,
+      "type": "country",
+      "value": "China"
+    }
+  },
+  {
+    "id": 10,
+    "name": "playstation 4",
+    "price": {
+      "id": 28,
+      "product": 10,
+      "type": "price",
+      "value": "500"
+    },
+    "country": {
+      "id": 29,
+      "product": 10,
+      "type": "country",
+      "value": "Japan"
+    }
+  },
+  {
+    "id": 9,
+    "name": "playstation 5",
+    "price": {
+      "id": 25,
+      "product": 9,
+      "type": "price",
+      "value": "1000"
+    },
+    "country": {
+      "id": 26,
+      "product": 9,
+      "type": "country",
+      "value": "Japan"
+    }
+  },
+  {
+    "id": 6,
+    "name": "pop corn",
+    "price": {
+      "id": 16,
+      "product": 6,
+      "type": "price",
+      "value": "6"
+    },
+    "country": {
+      "id": 17,
+      "product": 6,
+      "type": "country",
+      "value": "Africa"
+    }
+  },
+  {
+    "id": 5,
+    "name": "rock guitar",
+    "price": {
+      "id": 13,
+      "product": 5,
+      "type": "price",
+      "value": "1500"
+    },
+    "country": {
+      "id": 14,
+      "product": 5,
+      "type": "country",
+      "value": "German"
+    }
+  }
 ]
 ```
 
 ### Постраничный вывод продуктов
 
 ```
-http://localhost:8080/pages?page=0
+http://localhost:8080/all?productName&page=1
 ```
 ```json
-{
-    "content": [
-        {
-            "id": 87,
-            "name": "tyumen state university"
-        },
-        {
-            "id": 86,
-            "name": "harry potter"
-        },
-        {
-            "id": 85,
-            "name": "lada granta"
-        },
-        {
-            "id": 84,
-            "name": "tesla model s"
-        },
-        {
-            "id": 83,
-            "name": "plane"
-        },
-        {
-            "id": 82,
-            "name": "umbrella"
-        },
-        {
-            "id": 81,
-            "name": "computer"
-        },
-        {
-            "id": 80,
-            "name": "t-shirt"
-        },
-        {
-            "id": 79,
-            "name": "ps5"
-        },
-        {
-            "id": 78,
-            "name": "auto"
-        }
-    ],
-    "pageable": {
-        "sort": {
-            "empty": false,
-            "sorted": true,
-            "unsorted": false
-        },
-        "offset": 0,
-        "pageNumber": 0,
-        "pageSize": 10,
-        "unpaged": false,
-        "paged": true
+[
+  {
+    "id": 1,
+    "name": "tesla model s",
+    "price": {
+      "id": 1,
+      "product": 1,
+      "type": "price",
+      "value": "100000"
     },
-    "last": false,
-    "totalPages": 2,
-    "totalElements": 12,
-    "size": 10,
-    "number": 0,
-    "sort": {
-        "empty": false,
-        "sorted": true,
-        "unsorted": false
+    "country": {
+      "id": 2,
+      "product": 1,
+      "type": "country",
+      "value": "USA"
+    }
+  },
+  {
+    "id": 11,
+    "name": "wooden house",
+    "price": {
+      "id": 31,
+      "product": 11,
+      "type": "price",
+      "value": "50000"
     },
-    "first": true,
-    "numberOfElements": 10,
-    "empty": false
-}
+    "country": {
+      "id": 32,
+      "product": 11,
+      "type": "country",
+      "value": "Sweden"
+    }
+  }
+]
 ```
 
-### Вторая страница
+### Фильтр
 
 ```
-http://localhost:8080/pages?page=1
-```
-
-```json
-{
-    "content": [
-        {
-            "id": 77,
-            "name": "moto"
-        },
-        {
-            "id": 76,
-            "name": "TV"
-        }
-    ],
-    "pageable": {
-        "sort": {
-            "empty": false,
-            "sorted": true,
-            "unsorted": false
-        },
-        "offset": 10,
-        "pageNumber": 1,
-        "pageSize": 10,
-        "unpaged": false,
-        "paged": true
-    },
-    "last": true,
-    "totalPages": 2,
-    "totalElements": 12,
-    "size": 10,
-    "number": 1,
-    "sort": {
-        "empty": false,
-        "sorted": true,
-        "unsorted": false
-    },
-    "first": false,
-    "numberOfElements": 2,
-    "empty": false
-}
-```
-
-### Фильтр и сортировка
-```ordering = 1``` сортировка по алфавиту, все остальные значения - в обратном порядке
-```
-http://localhost:8080/filter?type=clothes&ordering=1
+http://localhost:8080/all?productName&page=0&propTypes=producer
 ```
 
 ```json
 [
-    {
-        "id": 103,
-        "product": {
-            "id": 102,
-            "name": "ab"
-        },
-        "type": "clothes",
-        "brand": "abcd",
-        "price": 1.0
+  {
+    "id": 7,
+    "name": "coffee",
+    "price": {
+      "id": 19,
+      "product": 7,
+      "type": "price",
+      "value": "10"
     },
-    {
-        "id": 101,
-        "product": {
-            "id": 100,
-            "name": "abc"
-        },
-        "type": "clothes",
-        "brand": "abcd",
-        "price": 1.0
-    },
-    {
-        "id": 92,
-        "product": {
-            "id": 80,
-            "name": "t-shirt"
-        },
-        "type": "clothes",
-        "brand": "h&m",
-        "price": 5.0
-    },
-    {
-        "id": 94,
-        "product": {
-            "id": 82,
-            "name": "umbrella"
-        },
-        "type": "clothes",
-        "brand": "moskovskiy trikotazh",
-        "price": 5.0
+    "country": {
+      "id": 20,
+      "product": 7,
+      "type": "country",
+      "value": "Zimbabve"
     }
+  },
+  {
+    "id": 8,
+    "name": "laptop",
+    "price": {
+      "id": 22,
+      "product": 8,
+      "type": "price",
+      "value": "1000"
+    },
+    "country": {
+      "id": 23,
+      "product": 8,
+      "type": "country",
+      "value": "China"
+    }
+  },
+  {
+    "id": 10,
+    "name": "playstation 4",
+    "price": {
+      "id": 28,
+      "product": 10,
+      "type": "price",
+      "value": "500"
+    },
+    "country": {
+      "id": 29,
+      "product": 10,
+      "type": "country",
+      "value": "Japan"
+    }
+  },
+  {
+    "id": 9,
+    "name": "playstation 5",
+    "price": {
+      "id": 25,
+      "product": 9,
+      "type": "price",
+      "value": "1000"
+    },
+    "country": {
+      "id": 26,
+      "product": 9,
+      "type": "country",
+      "value": "Japan"
+    }
+  }
+]
+```
+
+### Фильтр по имени и по имеющимся свойствам
+```
+http://localhost:8080/all?productName=cof&page=0&propTypes=producer
+```
+
+```json
+[
+  {
+    "id": 7,
+    "name": "coffee",
+    "price": {
+      "id": 19,
+      "product": 7,
+      "type": "price",
+      "value": "10"
+    },
+    "country": {
+      "id": 20,
+      "product": 7,
+      "type": "country",
+      "value": "Zimbabve"
+    }
+  }
 ]
 ```
 ### Получение конкретного товара
 ```
-http://localhost:8080/84
+http://localhost:8080/2
 ```
 ```json
 {
-    "name": "tesla model s",
-    "id": 84,
-    "properties": [
-        {
-            "id": 96,
-            "product": {
-                "id": 84,
-                "name": "tesla model s"
-            },
-            "type": "automobile",
-            "brand": "tesla",
-            "price": 5000.0
-        },
-        {
-            "id": 104,
-            "product": {
-                "id": 84,
-                "name": "tesla model s"
-            },
-            "type": "electrocar",
-            "brand": "tesla motors",
-            "price": 5000.0
-        }
-    ]
+  "name": "algorithm book",
+  "id": 2,
+  "properties": [
+    {
+      "id": 4,
+      "product": 2,
+      "type": "price",
+      "value": "10"
+    },
+    {
+      "id": 5,
+      "product": 2,
+      "type": "country",
+      "value": "USA"
+    },
+    {
+      "id": 6,
+      "product": 2,
+      "type": "author",
+      "value": "Aditya Bhargava"
+    }
+  ]
 }
 ```
 ### Удаление товара
 ```
-http://localhost:8080/delete/84
+http://localhost:8080/delete/2
 ```
 ```
-84
+2
 ```
 
 ### Удаление характеристики
 ```
-http://localhost:8080/deleteProp/103
+http://localhost:8080/deleteProp/36
 ```
 ```
-103
+36
 ```
 
 ### Изменение товара 
 ```
-http://localhost:8080/patchProduct/?id=82&name=newUmbrella3000
+http://localhost:8080/patchProduct/?id=12&name=newChicken
 ```
 Проверим
 ```
-http://localhost:8080/82
+http://localhost:8080/12
 ```
 ```json
 {
-  "name": "newUmbrella3000",
-  "id": 82,
+  "name": "newChicken",
+  "id": 12,
   "properties": [
     {
-      "id": 94,
-      "product": {
-        "id": 82,
-        "name": "newUmbrella3000"
-      },
-      "type": "clothes2",
-      "brand": "noname",
-      "price": 777.0
+      "id": 34,
+      "product": 12,
+      "type": "price",
+      "value": "1"
+    },
+    {
+      "id": 35,
+      "product": 12,
+      "type": "country",
+      "value": "Russia"
     }
   ]
 }
@@ -359,28 +471,36 @@ http://localhost:8080/82
 
 ### Изменение хараеткристики товара
 ```
-http://localhost:8080/putProperty/?id=94&product_id=82&type=clothes2&price=777&brand=noname
+http://localhost:8080/patchProperty?id=3&type=height&value=160
 ```
 
 Проверим
 ```
-http://localhost:8080/82
+http://localhost:8080/1
 ```
 ```json
 {
-    "name": "umbrella",
-    "id": 82,
-    "properties": [
-        {
-            "id": 94,
-            "product": {
-                "id": 82,
-                "name": "umbrella"
-            },
-            "type": "clothes2",
-            "brand": "noname",
-            "price": 777.0
-        }
-    ]
+  "name": "tesla model s",
+  "id": 1,
+  "properties": [
+    {
+      "id": 1,
+      "product": 1,
+      "type": "price",
+      "value": "100000"
+    },
+    {
+      "id": 2,
+      "product": 1,
+      "type": "country",
+      "value": "USA"
+    },
+    {
+      "id": 3,
+      "product": 1,
+      "type": "height",
+      "value": "160"
+    }
+  ]
 }
 ```

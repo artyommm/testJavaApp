@@ -14,17 +14,9 @@ import java.util.List;
 public interface ProductsRepo extends JpaRepository<Product, Integer> {
     Page<Product> findByNameContaining(String name, Pageable pageable);
 
-    @Query("SELECT p FROM property pr\n" +
+    @Query("SELECT DISTINCT p FROM property pr\n" +
             "JOIN pr.product p\n" +
-            "WHERE pr.type = :type\n" +
-            "ORDER BY pr.value ASC")
-    Page<Product> findAll(@Param("type") String type, Pageable pageable);
-
-    @Query("SELECT p FROM property pr\n" +
-            "JOIN pr.product p\n" +
-            "WHERE pr.type=:type\n" +
-            "AND p.name LIKE %:name%\n" +
-            "ORDER BY pr.value ASC")
-    Page<Product> findAll(@Param("name") String name, @Param("type") String type, Pageable pageable);
-
+            "WHERE pr.type IN :types\n" +
+            "AND p.name LIKE %:name%")
+    Page<Product> findAll(@Param("name") String name, @Param("types") List<String> types, Pageable pageable);
 }
